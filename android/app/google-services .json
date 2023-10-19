@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "621591419878",
+    "project_id": "therasense-391bb",
+    "storage_bucket": "therasense-391bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621591419878:android:401900529264c1499c1427",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrP6_Vrum0fbxFn4ylSluaJChOHovjxz0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
