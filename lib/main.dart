@@ -1,8 +1,11 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/PatientPage.dart';
 import 'package:flutter_application_1/auth.dart';
+import 'package:flutter_application_1/homePage.dart';
 import 'package:flutter_application_1/home_screen.dart';
+import 'package:flutter_application_1/profilePage.dart';
 import 'package:flutter_application_1/signin_form.dart';
 import 'package:flutter_application_1/signup_form.dart';
 import 'package:email_validator/email_validator.dart';
@@ -30,14 +33,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-     // home: HomePage(),
-      routes: { 
+      home: profile(),
+     /* routes: { 
         '/' :(context) => HomePage(),
         'Auth' :(context) => Auth(),
         'signupScreen' :(context) => SignUpForm(), 
         'signinScreen' :(context) => SignInForm(),
         'AddpatientScreen' :(context) => AddPatient(),
-      },
+        'homepage' :(context) => homePage(),
+        'profilepage' :(context) => profile(),
+        'patientpage' :(context) => PatientPage(),
+      },*/
     );
   }
 }

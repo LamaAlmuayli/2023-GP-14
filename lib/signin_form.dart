@@ -20,7 +20,7 @@ class _SignInState extends State<SignInForm> {
     await FirebaseAuth.instance.signInWithEmailAndPassword 
     (email: _emailController.text.trim(), password: _passwordController.text.trim(),);
 
-      Navigator.of(context).pushNamed('AddpatientScreen');
+      Navigator.of(context).pushNamed('homepage');
 
   }
 
