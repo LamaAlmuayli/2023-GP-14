@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/background.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter_application_1/nav_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quickalert/quickalert.dart';
@@ -20,11 +21,10 @@ class _AddPatientState extends State<AddPatient> {
   final _dateController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
- 
 
   Future Addpatient() async {
     Map<String, String> dataToSave = {
-      'Patient Name': _patientnameController.text,
+      'Name': _patientnameController.text,
       'ID': _idController.text,
       'Date of Birth': _dateController.text,
       'Phone Number': _phoneController.text,
@@ -32,7 +32,6 @@ class _AddPatientState extends State<AddPatient> {
     };
 //Check if any of the fields are empty
     bool allFieldsNotEmpty = true;
-   
 
     dataToSave.forEach((key, value) {
       if (value.isEmpty) {
@@ -137,7 +136,7 @@ class _AddPatientState extends State<AddPatient> {
                                 AutovalidateMode.onUserInteraction,
                             controller: _patientnameController,
                             decoration: InputDecoration(
-                              labelText: 'Patient Name',
+                              labelText: 'Name',
                               hintText: '',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -252,7 +251,7 @@ class _AddPatientState extends State<AddPatient> {
                                 AutovalidateMode.onUserInteraction,
                             controller: _emailController,
                             decoration: InputDecoration(
-                              labelText: 'Email Adress',
+                              labelText: 'Email Address',
                               hintText: 'xxxx@xxxxx.com',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -273,7 +272,6 @@ class _AddPatientState extends State<AddPatient> {
                               // If it is repeated, return an error message.
                               return null;
                             }),
-                      
                         SizedBox(height: 20),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 25),
@@ -321,6 +319,7 @@ class _AddPatientState extends State<AddPatient> {
             ),
           ],
         ),
+        bottomNavigationBar: NavBar(),
       ),
     );
   }

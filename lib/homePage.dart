@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/PatientPage.dart';
-//import 'package:google_fonts/google_fonts.dart';
 import 'nav_bar.dart';
-import 'patientPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class homePage extends StatelessWidget {
@@ -15,6 +13,7 @@ class homePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home Page'),
+        backgroundColor: Color(0xFF186257),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -39,7 +38,7 @@ class homePage extends StatelessWidget {
               ],
             ),
             Text(
-              'Dr. Name',
+              'Dr. Ahmed',
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
@@ -63,7 +62,7 @@ class homePage extends StatelessWidget {
             ),
             SizedBox(height: 24),
             Text(
-              'Current Articles',
+              'Recent Articles',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -185,50 +184,56 @@ class homePage extends StatelessWidget {
                         itemCount: patients.length,
                         itemBuilder: (context, index) {
                           var patientName =
-                              patients[index].data()['Name']?.toString() ??
-                                  'No Name Available';
-                          // return GestureDetector(
-                          //   onTap: () {
-                          //     Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //         builder: (context) => PatientPage(),
-                          //       ),
-                          //     );
-                          //   },
-                          //   child: Card(
-                          //     elevation: 2,
-                          //     shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(28),
-                          //     ),
-                          //     child: Container(
-                          //       height: 130,
-                          //       padding: EdgeInsets.all(8),
-                          //       child: Column(
-                          //         mainAxisAlignment: MainAxisAlignment.center,
-                          //         crossAxisAlignment: CrossAxisAlignment.start,
-                          //         children: [
-                          //           Text(
-                          //             patientName,
-                          //             style: GoogleFonts.nunitoSans(
-                          //               fontSize: 25,
-                          //               color: Colors.black,
-                          //               fontWeight: FontWeight.bold,
-                          //             ),
-                          //           ),
-                          //           SizedBox(height: 5),
-                          //           Text(
-                          //             'Additional Info',
-                          //             style: GoogleFonts.nunitoSans(
-                          //               fontSize: 12,
-                          //               color: Colors.grey,
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ),
-                          //   ),
-                          // );
+                              patients[index].data()['Name']?.toString();
+                          if (patientName != null &&
+                              patientName != 'No Name Available') {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PatientPage(),
+                                  ),
+                                );
+                              },
+                              child: Card(
+                                elevation: 2,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(28),
+                                ),
+                                child: Container(
+                                  height: 130,
+                                  padding: EdgeInsets.all(8),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        patientName,
+                                        style: TextStyle(
+                                          fontSize: 25,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Additional Info',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return SizedBox
+                                .shrink(); // Return an empty widget if name is not available
+                          }
                         },
                       );
                     } else if (snapshot.connectionState ==
@@ -250,8 +255,7 @@ class homePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-           Navigator.of(context).pushNamed('AddpatientScreen');
-      
+          Navigator.of(context).pushNamed('AddpatientScreen');
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xFF186257),

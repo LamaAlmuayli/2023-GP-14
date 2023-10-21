@@ -27,27 +27,15 @@ class PatientPage extends StatelessWidget {
           String? patientName = patientData['Name'] as String?;
           int? patientPhone = patientData['Phonenumber'] as int?;
           String? patientEmail = patientData['Email'] as String?;
-          Timestamp? timestamp = patientData['DateOfBirth'] as Timestamp?;
-          int patientAge = 0;
 
           if (patientID != null &&
               patientName != null &&
               patientPhone != null &&
-              patientEmail != null &&
-              timestamp != null) {
+              patientEmail != null) {
             int patientID = patientData['ID'];
             String patientName = patientData['Name'];
             int patientPhone = patientData['Phonenumber'];
             String patientEmail = patientData['Email'];
-            Timestamp timestamp = patientData['DateOfBirth'];
-            DateTime birthDate = timestamp.toDate();
-            DateTime now = DateTime.now();
-            patientAge = now.year - birthDate.year;
-
-            if (now.month < birthDate.month ||
-                (now.month == birthDate.month && now.day < birthDate.day)) {
-              patientAge--;
-            }
           }
 
           double boxWidth = MediaQuery.of(context).size.width - 50.0;
@@ -175,17 +163,6 @@ class PatientPage extends StatelessWidget {
                                 padding: const EdgeInsets.only(left: 16.0),
                                 child: Text(
                                   'ID: $patientID',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 5),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: Text(
-                                  'Age: $patientAge',
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,

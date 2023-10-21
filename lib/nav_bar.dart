@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_application_1/publishPage.dart';
 import 'homePage.dart';
 
-
 class NavBar extends StatefulWidget {
   @override
   _NavBarState createState() => _NavBarState();
@@ -46,27 +45,27 @@ class _NavBarState extends State<NavBar> {
           NavBarItem(
             imagePath: 'images/home.png',
             isSelected: selectedIcon == 'home',
-            onTap: () => selectIcon('home', homePage()),
+            onTap: (() => Navigator.of(context).pushNamed('homepage')),
           ),
-          // NavBarItem(
-          //   imagePath: 'images/community.png',
-          //   isSelected: selectedIcon == 'community',
-            //onTap: () => selectIcon('community', communityPage()),
-          // ),
-          //NavBarItem(
-           // imagePath: 'images/publish.png',
-          //   isSelected: selectedIcon == 'publish',
-          //  // onTap: () => selectIcon('publish', publishPage()),
-          // ),
-          // NavBarItem(
-          //   imagePath: 'images/chatbot.png',
-          //   isSelected: selectedIcon == 'chatbot',
-          //   onTap: () => selectIcon('chatbot', chatbotPage()),
-          // ),
+          NavBarItem(
+            imagePath: 'images/community.png',
+            isSelected: selectedIcon == 'community',
+            onTap: (() => Navigator.of(context).pushNamed('homepage')),
+          ),
+          NavBarItem(
+            imagePath: 'images/publish.png',
+            isSelected: selectedIcon == 'publish',
+            onTap: (() => Navigator.of(context).pushNamed('homepage')),
+          ),
+          NavBarItem(
+            imagePath: 'images/chatbot.png',
+            isSelected: selectedIcon == 'chatbot',
+            onTap: (() => Navigator.of(context).pushNamed('homepage')),
+          ),
           NavBarItem(
             imagePath: 'images/profile.png',
             isSelected: selectedIcon == 'profile',
-            onTap: (() => Navigator.of(context).pushNamed('homepage'))
+            onTap: (() => Navigator.of(context).pushNamed('profilepage')),
           ),
         ],
       ),

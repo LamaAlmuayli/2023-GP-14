@@ -1,8 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/nav_bar.dart';
 import 'background.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'nav_bar.dart';
 
 class profile extends StatefulWidget {
   const profile({super.key});
@@ -240,13 +242,15 @@ class _SignUpState extends State<profile> {
                         },
                       ),
                       SizedBox(height: 10),
-                       ElevatedButton(
-                        onPressed: signUp, // Call the signUp function when the button is pressed
+                      ElevatedButton(
+                        onPressed:
+                            signUp, // Call the signUp function when the button is pressed
                         style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Color(0xFF186257)),
+                          backgroundColor:
+                              MaterialStateProperty.all(Color(0xFF186257)),
                         ),
                         child: Text('Save'),
-                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -255,6 +259,7 @@ class _SignUpState extends State<profile> {
           ),
         ],
       ),
+      bottomNavigationBar: NavBar(),
     );
   }
 }
@@ -269,5 +274,6 @@ class Background extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         // Your background widget code here
-);}
+        );
+  }
 }
