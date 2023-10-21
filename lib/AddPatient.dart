@@ -234,7 +234,7 @@ class _AddPatientState extends State<AddPatient> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Email is required';
-                              } else if (!EmailValidator.validate(value)) {
+                              }  else if (!EmailValidator.validate(value) || RegExp(r'^[A-Za-z][A-Za-z0-9]*$').hasMatch(value)) {
                                 return 'Enter a valid email';
                               }
                               // You should add logic to check if the email is already in the database here.
