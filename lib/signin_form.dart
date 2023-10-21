@@ -105,7 +105,7 @@ class _SignInState extends State<SignInForm> {
                           labelText: 'Email',
                           hintText: 'xxxx@xxxxx.xx',
                           border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
                                   color: Color(0xFF186257), // Blue border in hex
                                 ),
@@ -135,7 +135,7 @@ class _SignInState extends State<SignInForm> {
                               labelText: 'Password',
                               hintText: 'Password',
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
                                   color: Color(0xFF186257), // Blue border in hex
                                 ),

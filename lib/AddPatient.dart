@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/background.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter_application_1/nav_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quickalert/quickalert.dart';
@@ -18,66 +17,66 @@ class _AddPatientState extends State<AddPatient> {
   late DateTime selectedDate;
   final _patientnameController = TextEditingController();
   final _idController = TextEditingController();
-  final _dateController = TextEditingController();
+
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
 
-  Future Addpatient() async {
-    Map<String, String> dataToSave = {
-      'Name': _patientnameController.text,
-      'ID': _idController.text,
-      'Date of Birth': _dateController.text,
-      'Phone Number': _phoneController.text,
-      'Email': _emailController.text,
-    };
-//Check if any of the fields are empty
-    bool allFieldsNotEmpty = true;
-
-    dataToSave.forEach((key, value) {
-      if (value.isEmpty) {
-        allFieldsNotEmpty = false;
-        //emptyField = key;
-      }
-    });
-
-    if (allFieldsNotEmpty) {
-      QuickAlert.show(
-          context: context,
-          text: "The Patient is in your list now!",
-          type: QuickAlertType.success);
-      FirebaseFirestore.instance.collection('Patient').add(dataToSave);
-      // All fields are not empty, proceed with adding the patient.
-      // Add your code to save the patient data here.
-    } else {
-      // Display an error message
+  Future<void> Addpatient() async {
+    // Check if any of the fields are empty
+    if (_patientnameController.text.isEmpty ||
+        _idController.text.isEmpty ||
+        _phoneController.text.isEmpty ||
+        _emailController.text.isEmpty) {
       final scaffold = ScaffoldMessenger.of(context);
       scaffold.showSnackBar(
         SnackBar(
-          content: Text('Please fill out the fields.'),
+          content: Text('Please fill out all the fields.'),
         ),
       );
+      return;
     }
 
-    //Navigator.push(context, MaterialPageRoute(builder: (context) => Homepage));
+// Check if the provided ID already exists in the database
+    bool idExists = await checkIfIdExists(_idController.text);
+
+    if (idExists) {
+      QuickAlert.show(
+        context: context,
+        text: "Patient number already exists!",
+        type: QuickAlertType.error,
+      );
+    } else {
+      Map<String, String> dataToSave = {
+        'Patient Name': _patientnameController.text,
+        'ID': _idController.text,
+        'Phone Number': _phoneController.text,
+        'Email': _emailController.text,
+      };
+
+      FirebaseFirestore.instance.collection('Patient').add(dataToSave);
+
+      QuickAlert.show(
+        context: context,
+        text: "The Patient is in your list now!",
+        type: QuickAlertType.success,
+      );
+
+      // Clear the form fields
+      _patientnameController.clear();
+      _idController.clear();
+
+      _phoneController.clear();
+      _emailController.clear();
+    }
   }
-  // TextEditingController _dateController = TextEditingController();
-  //late DateTime selectedDate;
 
-  //Future<void> _selectDate(BuildContext context) async {
-  // final DateTime? picked = await showDatePicker(
-  //  context: context,
-  // initialDate: selectedDate ?? DateTime.now(),
-  //  firstDate: DateTime(1900),
-  // lastDate: DateTime(2101),
-  // );
-
-  //if (picked != null && picked != selectedDate) {
-  //setState(() {
-  //  selectedDate = picked;
-  // _dateController.text = "${picked.month}/${picked.day}/${picked.year}";
-  // });
-  // }
-  // }
+  Future<bool> checkIfIdExists(String id) async {
+    final query = await FirebaseFirestore.instance
+        .collection('Patient')
+        .where('ID', isEqualTo: id)
+        .get();
+    return query.docs.isNotEmpty;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +126,7 @@ class _AddPatientState extends State<AddPatient> {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'Merriweather',
+                              fontFamily: 'Merriweather'
                             ),
                           ),
                         ),
@@ -137,7 +136,7 @@ class _AddPatientState extends State<AddPatient> {
                                 AutovalidateMode.onUserInteraction,
                             controller: _patientnameController,
                             decoration: InputDecoration(
-                              labelText: 'Name',
+                              labelText: 'Patient Name',
                               hintText: '',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -162,7 +161,7 @@ class _AddPatientState extends State<AddPatient> {
                                 AutovalidateMode.onUserInteraction,
                             controller: _idController,
                             decoration: InputDecoration(
-                              labelText: 'ID',
+                              labelText: 'Patient number',
                               hintText: 'XXXXX',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -175,11 +174,11 @@ class _AddPatientState extends State<AddPatient> {
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'ID is required';
+                                return 'Patient number is required';
                               } else if (!value.contains(RegExp(r'^[0-9]+$'))) {
                                 return 'Please enter digits only';
                               } else if (value.length > 5) {
-                                return 'ID must be at most 5 digits';
+                                return 'Patient number must be at most 5 digits';
                               }
                               return null;
                             }),
@@ -217,42 +216,11 @@ class _AddPatientState extends State<AddPatient> {
                             }),
                         SizedBox(height: 10),
                         TextFormField(
-                          controller: _dateController,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration: InputDecoration(
-                            labelText: 'Date of Birth',
-                            hintText: '',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                color: Color(0xFF186257), // Blue border in hex
-                              ),
-                            ),
-                            prefixIcon: Icon(Icons.calendar_today),
-                            // Calendar icon
-                          ),
-                          onTap: () async {
-                            final DateTime currentDate = DateTime.now();
-                            DateTime? pickeddate = await showDatePicker(
-                                context: context,
-                                initialDate: currentDate,
-                                firstDate: DateTime(1900),
-                                lastDate: currentDate);
-                            if (pickeddate != null) {
-                              setState(() {
-                                _dateController.text =
-                                    DateFormat('yyyy-MM-dd').format(pickeddate);
-                              });
-                            }
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        TextFormField(
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             controller: _emailController,
                             decoration: InputDecoration(
-                              labelText: 'Email Address',
+                              labelText: 'Email Adress',
                               hintText: 'xxxx@xxxxx.com',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -289,7 +257,8 @@ class _AddPatientState extends State<AddPatient> {
                                 child: Text(
                                   'Add',
                                   style: TextStyle(
-                                    color: Colors.white, // White text color
+                                    color: Colors.white, 
+                                      fontFamily: 'Merriweather',// White text color
                                   ),
                                 ),
                               ),
@@ -320,7 +289,6 @@ class _AddPatientState extends State<AddPatient> {
             ),
           ],
         ),
-        bottomNavigationBar: NavBar(),
       ),
     );
   }

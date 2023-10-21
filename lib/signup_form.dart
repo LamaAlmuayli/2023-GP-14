@@ -181,7 +181,7 @@ class _SignUpState extends State<SignUpForm> {
                           labelText: 'Full Name',
                           hintText: '',
                           border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
                                   color: Color(0xFF186257), // Blue border in hex
                                 ),
@@ -205,7 +205,7 @@ class _SignUpState extends State<SignUpForm> {
                           labelText: 'Email',
                           hintText: 'xxxx@xxxxx.com',
                           border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
                                   color: Color(0xFF186257), // Blue border in hex
                                 ),
@@ -234,7 +234,7 @@ class _SignUpState extends State<SignUpForm> {
                           labelText: 'Job Title',
                           hintText: 'Physical Therapist',
                           border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
                                   color: Color(0xFF186257), // Blue border in hex
                                 ),
@@ -257,7 +257,7 @@ class _SignUpState extends State<SignUpForm> {
                           labelText: 'Hospital/Clinic',
                           hintText: '',
                           border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
                                   color: Color(0xFF186257), // Blue border in hex
                                 ),
@@ -284,7 +284,7 @@ class _SignUpState extends State<SignUpForm> {
                           labelText: 'Password',
                           hintText: '',
                           border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
                                   color: Color(0xFF186257), // Blue border in hex
                                 ),
@@ -309,7 +309,7 @@ class _SignUpState extends State<SignUpForm> {
                           labelText: 'Confirm Password',
                           hintText: '',
                           border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
                                   color: Color(0xFF186257), // Blue border in hex
                                 ),
