@@ -81,10 +81,12 @@ class _SignUpState extends State<SignUpForm> {
       final scaffold = ScaffoldMessenger.of(context);
       scaffold.showSnackBar(
         SnackBar(
-          content: Text('Password or email is incorrect.'),
+          content: Text('Please fill out the fields.'),
         ),
       );
     }
+
+   
 
     //Navigator.push(context, MaterialPageRoute(builder: (context) => Homepage));
   
@@ -265,6 +267,8 @@ class _SignUpState extends State<SignUpForm> {
                         validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Hospital/Clinic is required';
+                        }else if (!value.isAlphaOnly) {
+                          return 'Hospital/Clinic should only contain alphabetic characters';
                         }
                         return null;
                       }

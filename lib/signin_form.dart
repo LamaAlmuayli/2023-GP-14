@@ -21,6 +21,8 @@ class _SignInState extends State<SignInForm> {
     (email: _emailController.text.trim(), password: _passwordController.text.trim(),);
 
       Navigator.of(context).pushNamed('homepage');
+
+      
       
 
   }
@@ -30,6 +32,8 @@ class _SignInState extends State<SignInForm> {
   void openSignupScreen() {
 
   Navigator.of(context).pushReplacementNamed('signupScreen');
+
+
   }
 
   @override
@@ -107,15 +111,18 @@ class _SignInState extends State<SignInForm> {
                           prefixIcon: Icon(Icons.email), // Icon for email
                         ),
                        // validator: validateEmail,
-                       validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Email is required';
-                      } else if (!EmailValidator.validate(value)) {
-                        return 'Enter a valid email';
-                      }
-                // You should add logic to check if the email is already in the database here.
-                // If it is repeated, return an error message.
-                        return null;
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Email is required';
+                        } else if (!EmailValidator.validate(value) || RegExp(r'^[A-Za-z][A-Za-z0-9]*$').hasMatch(value)
+) {
+                          return 'Enter a valid email';
+                        } else {
+                          // You should add logic to check if the email is already in the database here.
+                          // If it is repeated, return an error message.
+                          // For now, return null as a placeholder.
+                          return null;
+                        }
                       },    ),
                           SizedBox(height: 10),
                           TextFormField(
