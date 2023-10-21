@@ -250,7 +250,8 @@ class homePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your action when the button is pressed
+           Navigator.of(context).pushNamed('AddpatientScreen');
+      
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xFF186257),

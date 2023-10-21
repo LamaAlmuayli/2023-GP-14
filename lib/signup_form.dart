@@ -27,11 +27,29 @@ class _SignUpState extends State<SignUpForm> {
 
  Future signUp() async { 
 
-  // If everything is valid, proceed with the sign-up.
-  await FirebaseAuth.instance.createUserWithEmailAndPassword(
-    email: _emailController.text.trim(),
-    password: _passwordController.text.trim(),
-  );
+  try {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+    // Registration successful
+  } catch (e) {
+    if (e is FirebaseAuthException) {
+      if (e.code == 'email-already-in-use') {
+       ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('The email address is already in use by another account.') ) );
+      } else {
+        // Handle other FirebaseAuthException errors or display a generic error message.
+       ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('An error occurred: ${e.message}')));
+      }
+    }
+  }
+
+
+  
   Navigator.of(context).pushNamed('Auth');
 
       Map<String, String> dataToSave = {
@@ -45,7 +63,6 @@ class _SignUpState extends State<SignUpForm> {
 
 //Check if any of the fields are empty
     bool allFieldsNotEmpty = true;
-   
 
     dataToSave.forEach((key, value) {
       if (value.isEmpty) {
@@ -195,14 +212,16 @@ class _SignUpState extends State<SignUpForm> {
                         ),
                        // validator: validateEmail,
                        validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Email is required';
-                      } else if (!EmailValidator.validate(value)) {
-                        return 'Enter a valid email';
-                      }
-                // You should add logic to check if the email is already in the database here.
-                // If it is repeated, return an error message.
-                        return null;
+                        if (value == null || value.isEmpty) {
+                          return 'Email is required';
+                        } else if (!EmailValidator.validate(value) || RegExp(r'^[A-Za-z][A-Za-z0-9]*$').hasMatch(value)) {
+                          return 'Enter a valid email';
+                        } else {
+                          // You should add logic to check if the email is already in the database here.
+                          // If it is repeated, return an error message.
+                          // For now, return null as a placeholder.
+                          return null;
+                        }
                       },
                       ),
                       SizedBox(height: 10),

@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: profile(),
-     /* routes: { 
+      //home: profile(),
+     routes: { 
         '/' :(context) => HomePage(),
         'Auth' :(context) => Auth(),
         'signupScreen' :(context) => SignUpForm(), 
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         'homepage' :(context) => homePage(),
         'profilepage' :(context) => profile(),
         'patientpage' :(context) => PatientPage(),
-      },*/
+      },
     );
   }
 }

@@ -44,13 +44,13 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   RichText(
                     text: TextSpan(children: [
                       TextSpan(
                         text: 'The greatest wealth is health.',
-                        style: headlineDot,
+                        style: headlineDot.copyWith(color: Colors.white),
                       ),
                     ]),
                   ),
