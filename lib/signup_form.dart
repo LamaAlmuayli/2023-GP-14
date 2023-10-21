@@ -167,7 +167,7 @@ class _SignUpState extends State<SignUpForm> {
                         child: Text(
                           'Sign up for an account',
                           style: TextStyle(
-                            //fontFamily: ,
+                           fontFamily: 'Merriweather',
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -344,7 +344,8 @@ class _SignUpState extends State<SignUpForm> {
                               child: Text(
                                 'Sign Up',
                                 style: TextStyle(
-                                  color: Colors.white, // White text color
+                                  color: Colors.white, 
+                                   fontFamily: 'Merriweather',// White text color
                                 ),
                               ),
                             ),

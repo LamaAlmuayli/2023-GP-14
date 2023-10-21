@@ -127,6 +127,7 @@ class _AddPatientState extends State<AddPatient> {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
+                              fontFamily: 'Merriweather',
                             ),
                           ),
                         ),
