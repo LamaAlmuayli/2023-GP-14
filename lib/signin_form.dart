@@ -46,18 +46,19 @@ class _SignInState extends State<SignInForm> {
 
   @override
   Widget build(BuildContext context) {
+     final height = MediaQuery.of(context).size.height;
      return Form(
     
      key: _formKey,
       child: Scaffold (
       body: Stack(
         children: [
-          Background(), // Use the Background widget for the image
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: MediaQuery.of(context).size.height / 2, // Half of the screen
-              color: Color(0xFF186257), // Background color in hex
+           Container(
+            color: Color(0xFF186257), // Replace with your background color
+            child: Image.asset(
+              "assets/images/background.jpeg",
+              height: height,
+              fit: BoxFit.contain, 
             ),
           ),
           Align(
@@ -92,6 +93,7 @@ class _SignInState extends State<SignInForm> {
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
+                                 fontFamily: 'Merriweather'
                               ),
                             ),
                           ),
@@ -163,7 +165,8 @@ class _SignInState extends State<SignInForm> {
                               child: Text(
                                 'Sign In',
                                 style: TextStyle(
-                                  color: Colors.white, // White text color
+                                  color: Colors.white,
+                                   //fontFamily: 'Merriweather', // White text color
                                 ),
                          // ElevatedButton(
                            // onPressed: () {
@@ -191,7 +194,8 @@ class _SignInState extends State<SignInForm> {
                                    child : Text(
                                     'Sign up now',
                                     style: TextStyle(
-                                      color: Color(0xFF186257), // Green color in hex
+                                      color: Color(0xFF186257), 
+                                       fontFamily: 'Merriweather'// Green color in hex
                                     ),
                                   ),
                                 ),
