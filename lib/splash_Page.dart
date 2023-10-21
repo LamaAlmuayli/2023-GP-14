@@ -7,6 +7,7 @@ import '/core/space.dart';
 import '/core/text_style.dart';
 import '/widget/main_button.dart';
 
+
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
 
@@ -15,60 +16,94 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  double opacity = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Add a delay and then animate the opacity of the content
+    Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        opacity = 1.0;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      //  backgroundColor: white,
       body: Stack(
         children: [
           Container(
-            height: height,
-            color: blackBG,
+            color: Color(0xFF186257), // Replace with your background color
             child: Image.asset(
               "assets/images/background.jpeg",
               height: height,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain, 
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
+          AnimatedPositioned(
+            duration: Duration(seconds: 1), // Adjust the duration as needed
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: height / 3,
             child: Container(
-              height: height / 3,
-              width: double.infinity,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: gradient,
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
+                  colors: [Colors.transparent, Colors.black], // Adjust gradient colors
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  RichText(
-                    text: TextSpan(children: [
-                      TextSpan(
-                        text: 'The greatest wealth is health.',
-                        style: headlineDot.copyWith(color: Colors.white),
+                  AnimatedOpacity(
+                    duration: Duration(seconds: 1), // Adjust the duration as needed
+                    opacity: opacity,
+                    child: Text(
+                      'The greatest wealth is health',
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontFamily: 'KaushanScript',
+                        color: Colors.white,
                       ),
-                    ]),
+                    ),
                   ),
-                  Mainbutton(
-                    onTap: () {
-                      Navigator.push(
+                  SizedBox(height: 20),
+                  AnimatedOpacity(
+                    duration: Duration(seconds: 1), // Adjust the duration as needed
+                    opacity: opacity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                         minimumSize: Size(200, 60),  // Button background color
+                      ), 
+                      onPressed: () {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (builder) => SignInForm()));
-                    },
-                    btnColor: Color.fromARGB(255, 255, 255, 255),
-                    text: 'Get Started',
-                    txtColor: Color(0xFF186257),
+                            builder: (context) => SignInForm(),
+                            
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Get Started",
+                        style: TextStyle(
+                          color: Color(0xFF186257),
+                          fontSize: 18,
+                          fontFamily: 'Merriweather',
+                        )
+                    )),
                   ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
