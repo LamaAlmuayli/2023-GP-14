@@ -188,8 +188,11 @@ class homePage extends StatelessWidget {
                         itemBuilder: (context, index) {
                           var patientName =
                               patients[index].data()['Name']?.toString();
+                          var patientNumber =
+                              patients[index].data()['ID']?.toString();
                           if (patientName != null &&
-                              patientName != 'No Name Available') {
+                              patientName != 'No Name Available' &&
+                              patientNumber != null) {
                             return GestureDetector(
                               onTap: () {
                                 Navigator.push(
@@ -223,7 +226,7 @@ class homePage extends StatelessWidget {
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        'Additional Info',
+                                        'patient#' + patientNumber,
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey,
