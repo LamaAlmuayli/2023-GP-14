@@ -40,6 +40,9 @@ class PatientPage extends StatelessWidget {
           double boxWidth = MediaQuery.of(context).size.width - 50.0;
 
           return Scaffold(
+            // appBar: AppBar(
+            //   title: Text('Patient Page'),
+            // ),
             body: Padding(
               padding: EdgeInsets.only(left: 25.0),
               child: Column(
@@ -158,7 +161,7 @@ class PatientPage extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(left: 16.0),
                                 child: Text(
-                                  'ID: $patientID',
+                                  'Patient Number: $patientID',
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,

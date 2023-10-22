@@ -11,10 +11,10 @@ class homePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home Page'),
-        backgroundColor: Color(0xFF186257),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Home Page'),
+      //   backgroundColor: Color(0xFF186257),
+      // ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -43,6 +43,7 @@ class homePage extends StatelessWidget {
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
+                fontFamily: 'Merriweather',
               ),
             ),
             SizedBox(height: 16),
@@ -67,6 +68,7 @@ class homePage extends StatelessWidget {
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF186257),
+                fontFamily: 'Merriweather',
               ),
             ),
             SizedBox(height: 5),
@@ -135,6 +137,7 @@ class homePage extends StatelessWidget {
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF186257),
+                    fontFamily: 'Merriweather',
                   ),
                 ),
                 PopupMenuButton<String>(
@@ -215,6 +218,7 @@ class homePage extends StatelessWidget {
                                           fontSize: 25,
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
+                                          fontFamily: 'Merriweather',
                                         ),
                                       ),
                                       SizedBox(height: 5),
