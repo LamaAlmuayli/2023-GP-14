@@ -5,6 +5,11 @@ import 'package:flutter/material.dart';
 import 'background.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+
+
+
 
 class SignUpForm extends StatefulWidget { 
   const SignUpForm({super.key}); 
@@ -13,8 +18,15 @@ class SignUpForm extends StatefulWidget {
   State<SignUpForm> createState() => _SignUpState(); 
 }
 
+String hashPassword(String password, String salt) {
+  final key = utf8.encode(salt);
+  final bytes = utf8.encode(password);
+  final hmacSha256 = Hmac(sha256, key); // HMAC-SHA256
+  final digest = hmacSha256.convert(bytes);
+  return digest.toString();
+}
 class _SignUpState extends State<SignUpForm> {
-  
+  String hashedPassword = hashPassword('user_password', 'unique_salt');
   final _formKey = GlobalKey<FormState>();
   final _fullnameController = TextEditingController();
   final  _emailController = TextEditingController();
@@ -32,6 +44,10 @@ class _SignUpState extends State<SignUpForm> {
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
+    
+    Navigator.of(context).pushNamed('signinScreen');
+  
+
     // Registration successful
   } catch (e) {
     if (e is FirebaseAuthException) {
@@ -47,17 +63,15 @@ class _SignUpState extends State<SignUpForm> {
       }
     }
   }
+   
 
-
-  
-  Navigator.of(context).pushNamed('Auth');
-
+ 
       Map<String, String> dataToSave = {
   'Full name': _fullnameController.text,
   'Email': _emailController.text,
   'Job Title': _jobController.text,
   'Hospital/Clinic': _hospitalController.text,
-  'Password': _passwordController.text,
+  'Password': hashedPassword,
 };
 
 

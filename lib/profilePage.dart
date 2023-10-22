@@ -25,14 +25,27 @@ class _SignUpState extends State<profile> {
 // Stream to retrieve therapist data
   late Stream<DocumentSnapshot> therapistStream;
   @override
-  void initState() {
-    super.initState();
-    // Initialize the stream
-    therapistStream = FirebaseFirestore.instance
-        .collection('Therapist')
-        .doc('d2qJez1joy6pEsckWrJg')
-        .snapshots();
-  }
+void initState() {
+  super.initState();
+  // Initialize the stream to get the last document added
+  FirebaseFirestore.instance
+      .collection('Therapist')
+      .orderBy(FieldPath.documentId, descending: true) // Order by document ID in descending order
+      .limit(1) // Limit the query to 1 result, which is the last added document
+      .snapshots()
+      .listen((QuerySnapshot snapshot) {
+    if (snapshot.docs.isNotEmpty) {
+      // Do something with the last document
+      DocumentSnapshot lastDocument = snapshot.docs.first;
+      setState(() {
+        therapistStream = FirebaseFirestore.instance
+            .collection('Therapist')
+            .doc(lastDocument.id) // Get the document by its ID
+            .snapshots();
+      });
+    }
+  });
+}
 
   Future signUp() async {
     // If everything is valid, proceed with the sign-up.
