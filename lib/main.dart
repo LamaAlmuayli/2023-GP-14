@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/PatientPage.dart';
 import 'package:flutter_application_1/auth.dart';
+import 'package:flutter_application_1/edit_profile.dart';
 import 'package:flutter_application_1/homePage.dart';
 import 'package:flutter_application_1/home_screen.dart';
 import 'package:flutter_application_1/profilePage.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         'homepage': (context) => homePage(),
         'profilepage': (context) => profile(),
         'patientpage': (context) => PatientPage(),
+        'editprofilepage': (context) => editprofile(),
       },
       theme: ThemeData(
         primaryColor: Color(0xFF186257),

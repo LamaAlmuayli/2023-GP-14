@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:google_fonts/google_fonts.dart';
 import 'nav_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -41,9 +40,6 @@ class PatientPage extends StatelessWidget {
           double boxWidth = MediaQuery.of(context).size.width - 50.0;
 
           return Scaffold(
-            appBar: AppBar(
-              title: Text('Patient Page'),
-            ),
             body: Padding(
               padding: EdgeInsets.only(left: 25.0),
               child: Column(
