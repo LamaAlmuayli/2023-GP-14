@@ -7,6 +7,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+
+
+
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -23,7 +28,23 @@ String hashPassword(String password, String salt) {
   return digest.toString();
 }
 
+String hashPassword(String password, String salt) {
+  final key = utf8.encode(salt);
+  final bytes = utf8.encode(password);
+  final hmacSha256 = Hmac(sha256, key); // HMAC-SHA256
+  final digest = hmacSha256.convert(bytes);
+  return digest.toString();
+}
+
+String hashPassword(String password, String salt) {
+  final key = utf8.encode(salt);
+  final bytes = utf8.encode(password);
+  final hmacSha256 = Hmac(sha256, key); // HMAC-SHA256
+  final digest = hmacSha256.convert(bytes);
+  return digest.toString();
+}
 class _SignUpState extends State<SignUpForm> {
+  String hashedPassword = hashPassword('user_password', 'unique_salt');
   String hashedPassword = hashPassword('user_password', 'unique_salt');
   final _formKey = GlobalKey<FormState>();
   final _fullnameController = TextEditingController();
@@ -54,16 +75,44 @@ class _SignUpState extends State<SignUpForm> {
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('An error occurred: ${e.message}')));
         }
+ Future signUp() async { 
+
+  try {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+    
+    Navigator.of(context).pushNamed('signinScreen');
+  
+
+    // Registration successful
+  } catch (e) {
+    if (e is FirebaseAuthException) {
+      if (e.code == 'email-already-in-use') {
+       ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('The email address is already in use by another account.') ) );
+      } else {
+        // Handle other FirebaseAuthException errors or display a generic error message.
+       ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('An error occurred: ${e.message}')));
       }
     }
+  }
 
-    Map<String, String> dataToSave = {
-      'Full name': _fullnameController.text,
-      'Email': _emailController.text,
-      'Job Title': _jobController.text,
-      'Hospital/Clinic': _hospitalController.text,
-      'Password': hashedPassword,
-    };
+
+  
+  Navigator.of(context).pushNamed('Auth');
+
+      Map<String, String> dataToSave = {
+  'Full name': _fullnameController.text,
+  'Email': _emailController.text,
+  'Job Title': _jobController.text,
+  'Hospital/Clinic': _hospitalController.text,
+  'Password': _passwordController.text,
+};
 
 //Check if any of the fields are empty
     bool allFieldsNotEmpty = true;
