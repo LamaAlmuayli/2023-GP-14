@@ -152,6 +152,7 @@ void initState() {
                           return Column(
                             children: [
                               TextFormField(
+                                enabled: false,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 controller: _fullnameController,
@@ -177,6 +178,7 @@ void initState() {
                               ),
                               SizedBox(height: 10),
                               TextFormField(
+                                enabled: false,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 controller: _emailController,
@@ -203,6 +205,7 @@ void initState() {
                               // Other form fields here
                               SizedBox(height: 10),
                               TextFormField(
+                                enabled: false,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 controller: _jobController,
@@ -228,6 +231,7 @@ void initState() {
                               ),
                               SizedBox(height: 10),
                               TextFormField(
+                                enabled: false,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 controller: _hospitalController,
@@ -256,13 +260,13 @@ void initState() {
                       ),
                       SizedBox(height: 10),
                       ElevatedButton(
-                        onPressed:
-                            signUp, // Call the signUp function when the button is pressed
+                        onPressed: (() => Navigator.of(context).pushNamed(
+                            'editprofilepage')), // Call the signUp function when the button is pressed
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Color(0xFF186257)),
                         ),
-                        child: Text('Save'),
+                        child: Text('Edit'),
                       ),
                     ],
                   ),

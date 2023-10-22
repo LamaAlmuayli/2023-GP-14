@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:google_fonts/google_fonts.dart';
 import 'nav_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -162,7 +161,7 @@ class PatientPage extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(left: 16.0),
                                 child: Text(
-                                  'ID: $patientID',
+                                  'Patient Number: $patientID',
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/PatientPage.dart';
 import 'package:flutter_application_1/auth.dart';
+import 'package:flutter_application_1/edit_profile.dart';
 import 'package:flutter_application_1/homePage.dart';
 import 'package:flutter_application_1/home_screen.dart';
 import 'package:flutter_application_1/profilePage.dart';
@@ -15,13 +16,13 @@ import 'package:flutter_application_1/splash_Page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    name:"TheraSense",
+      name: "TheraSense",
       options: FirebaseOptions(
-    apiKey: "AIzaSyAyaW86iJF-2Zh0n0aukpgzK7Z9ff5jaPs",
-    appId: "Y1:621591419878:android:401900529264c1499c1427",
-    messagingSenderId: "621591419878",
-    projectId: "therasense-391bb",
-  ));
+        apiKey: "AIzaSyAyaW86iJF-2Zh0n0aukpgzK7Z9ff5jaPs",
+        appId: "Y1:621591419878:android:401900529264c1499c1427",
+        messagingSenderId: "621591419878",
+        projectId: "therasense-391bb",
+      ));
 
   runApp(const MyApp());
 }
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         'homepage': (context) => homePage(),
         'profilepage': (context) => profile(),
         'patientpage': (context) => PatientPage(),
+        'editprofilepage': (context) => editprofile(),
       },
       theme: ThemeData(
         primaryColor: Color(0xFF186257),
