@@ -255,6 +255,33 @@ class _SignUpState extends State<profile> {
                         ),
                         child: Text('Edit'),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                        child: TextButton.icon(
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(
+                              fontSize: 25,
+                            ),
+                          ),
+                          onPressed: () {
+                            //FirebaseAuth.instance.signOut();
+
+                            Navigator.of(context).pushNamed('signinScreen');
+                          },
+                          icon: Icon(
+                            Icons.logout,
+                            size: 30.0,
+                            color: Color.fromARGB(255, 150, 150, 150),
+                          ),
+                          label: Text(
+                            'Log out',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 150, 150, 150),
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Merriweather'),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -271,13 +298,4 @@ class _SignUpState extends State<profile> {
 extension StringValidation on String {
   bool get isAlphaOnly => this.runes.every(
       (rune) => (rune >= 65 && rune <= 90) || (rune >= 97 && rune <= 122));
-}
-
-class Background extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        // Your background widget code here
-        );
-  }
 }
