@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
         'profilepage': (context) => profile(),
         'patientpage': (context) => PatientPage(),
         'editprofilepage': (context) => editprofile(),
+        'forgetpasswordScreen' :(context) => ForgotPasswordForm(),
       },
       theme: ThemeData(
         primaryColor: Color(0xFF186257),
