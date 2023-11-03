@@ -2,9 +2,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'background.dart';
+import 'package:flutter_application_1/services/authentic.dart';
+import '../shared/background.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
@@ -32,28 +32,36 @@ class _SignUpState extends State<SignUpForm> {
   final _hospitalController = TextEditingController();
   final _passwordController = TextEditingController();
   final _cnfpasswordController = TextEditingController();
+  final userStream = FirebaseAuth.instance.authStateChanges();
+  final user = AuthService().user;
 
   Future signUp() async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      Navigator.of(context).pushNamed('homepage');
+      String uid = userCredential.user!.uid;
 
-      // Registration successful
+      Map<String, String> dataToSave = {
+        'Full name': _fullnameController.text,
+        'Email': _emailController.text,
+        'Job Title': _jobController.text,
+        'HospitalClinic': _hospitalController.text,
+        'Password': hashedPassword,
+      };
+
+      await FirebaseFirestore.instance
+          .collection('Therapist')
+          .doc(uid)
+          .set(dataToSave);
+
+      Navigator.of(context).pushNamed('homepage');
     } catch (e) {
       if (e is FirebaseAuthException) {
-        if (e.code == 'email-already-in-use') {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-                  'The email address is already in use by another account.')));
-        } else {
-          // Handle other FirebaseAuthException errors or display a generic error message.
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('An error occurred: ${e.message}')));
-        }
+        // Handle FirebaseAuthException errors
       }
     }
 
@@ -83,7 +91,7 @@ class _SignUpState extends State<SignUpForm> {
       // Display an error message
       final scaffold = ScaffoldMessenger.of(context);
       scaffold.showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Please fill out the fields.'),
         ),
       );
@@ -124,12 +132,12 @@ class _SignUpState extends State<SignUpForm> {
       child: Scaffold(
         body: Stack(
           children: [
-            Background(),
+            const Background(),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
                 height: MediaQuery.of(context).size.height / 2,
-                color: Color(0xFF186257),
+                color: const Color(0xFF186257),
               ),
             ),
             Align(
@@ -137,10 +145,10 @@ class _SignUpState extends State<SignUpForm> {
               child: FractionallySizedBox(
                 heightFactor: 0.6,
                 child: Container(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
                     ),
@@ -149,7 +157,7 @@ class _SignUpState extends State<SignUpForm> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 5,
                         blurRadius: 7,
-                        offset: Offset(0, 3),
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
@@ -157,7 +165,7 @@ class _SignUpState extends State<SignUpForm> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Center(
+                        const Center(
                           child: Text(
                             'Sign up for an account',
                             style: TextStyle(
@@ -167,7 +175,7 @@ class _SignUpState extends State<SignUpForm> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           controller: _fullnameController,
@@ -176,12 +184,12 @@ class _SignUpState extends State<SignUpForm> {
                             hintText: '',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                 color: Color(0xFF186257), // Blue border in hex
                               ),
                             ),
-                            prefixIcon:
-                                Icon(Icons.person), // Icon for date of birth
+                            prefixIcon: const Icon(
+                                Icons.person), // Icon for date of birth
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -192,7 +200,7 @@ class _SignUpState extends State<SignUpForm> {
                             return null;
                           },
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           controller: _emailController,
@@ -201,11 +209,12 @@ class _SignUpState extends State<SignUpForm> {
                             hintText: 'xxxx@xxxxx.com',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                 color: Color(0xFF186257), // Blue border in hex
                               ),
                             ),
-                            prefixIcon: Icon(Icons.email), // Icon for email
+                            prefixIcon:
+                                const Icon(Icons.email), // Icon for email
                           ),
                           // validator: validateEmail,
                           validator: (value) {
@@ -223,7 +232,7 @@ class _SignUpState extends State<SignUpForm> {
                             }
                           },
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         TextFormField(
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
@@ -233,12 +242,12 @@ class _SignUpState extends State<SignUpForm> {
                               hintText: 'Physical Therapist',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color:
                                       Color(0xFF186257), // Blue border in hex
                                 ),
                               ),
-                              prefixIcon: Icon(Icons.work), // Icon
+                              prefixIcon: const Icon(Icons.work), // Icon
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -248,7 +257,7 @@ class _SignUpState extends State<SignUpForm> {
                               }
                               return null;
                             }),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         TextFormField(
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
@@ -258,12 +267,13 @@ class _SignUpState extends State<SignUpForm> {
                               hintText: '',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color:
                                       Color(0xFF186257), // Blue border in hex
                                 ),
                               ),
-                              prefixIcon: Icon(Icons.local_hospital), // Icon
+                              prefixIcon:
+                                  const Icon(Icons.local_hospital), // Icon
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -273,7 +283,7 @@ class _SignUpState extends State<SignUpForm> {
                               }
                               return null;
                             }),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
 
                         TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -284,11 +294,12 @@ class _SignUpState extends State<SignUpForm> {
                             hintText: '',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                 color: Color(0xFF186257), // Blue border in hex
                               ),
                             ),
-                            prefixIcon: Icon(Icons.lock), // Icon for password
+                            prefixIcon:
+                                const Icon(Icons.lock), // Icon for password
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -299,7 +310,7 @@ class _SignUpState extends State<SignUpForm> {
                             return null;
                           },
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           obscureText: true,
@@ -309,11 +320,12 @@ class _SignUpState extends State<SignUpForm> {
                             hintText: '',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                 color: Color(0xFF186257), // Blue border in hex
                               ),
                             ),
-                            prefixIcon: Icon(Icons.lock), // Icon for password
+                            prefixIcon:
+                                const Icon(Icons.lock), // Icon for password
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -327,19 +339,19 @@ class _SignUpState extends State<SignUpForm> {
                             return null;
                           },
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 25),
+                          padding: const EdgeInsets.symmetric(horizontal: 25),
                           child: GestureDetector(
                             onTap: signUp,
                             child: Container(
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
-                                color: Color(0xFF186257),
+                                color: const Color(0xFF186257),
                                 borderRadius: BorderRadius.circular(
                                     15), // Rounded borders
                               ),
-                              child: Center(
+                              child: const Center(
                                 child: Text(
                                   'Sign Up',
                                   style: TextStyle(
@@ -359,14 +371,14 @@ class _SignUpState extends State<SignUpForm> {
                         // ),
                         // child: Text('Sign Up'),
                         // ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("Already have an acount? "),
+                            const Text("Already have an acount? "),
                             GestureDetector(
                               onTap: openSignInScreen,
-                              child: Text(
+                              child: const Text(
                                 'Sign In here',
                                 style: TextStyle(
                                   color:
@@ -393,6 +405,6 @@ class _SignUpState extends State<SignUpForm> {
 }
 
 extension StringValidation on String {
-  bool get isAlphaOnly => this.runes.every(
+  bool get isAlphaOnly => runes.every(
       (rune) => (rune >= 65 && rune <= 90) || (rune >= 97 && rune <= 122));
 }

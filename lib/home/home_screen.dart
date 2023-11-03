@@ -16,10 +16,10 @@ class _HomeScreenState extends State<HomeScreen> {
     child : Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children : [
-        Text('Hello, You are signed in') ,
+        const Text('Hello, You are signed in') ,
         MaterialButton(onPressed: () {FirebaseAuth.instance.signOut();} , 
-        color:  Color(0xFF186257), 
-        child: Text('sign out'),
+        color:  const Color(0xFF186257), 
+        child: const Text('sign out'),
          ),
       ],
    

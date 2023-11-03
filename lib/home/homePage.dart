@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/PatientPage.dart';
-import 'nav_bar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_1/shared/bottom_nav.dart';
+//import 'package:flutter_application_1/patient/patientPage.dart';
+import '../shared/nav_bar.dart';
+import '../services/models.dart';
+import '../services/firestore.dart';
 
 class homePage extends StatelessWidget {
-  Stream<QuerySnapshot<Map<String, dynamic>>> getPatients() {
-    return FirebaseFirestore.instance.collection('Patient').snapshots();
-  }
+  const homePage({super.key});
+
+  // Stream<QuerySnapshot<Map<String, dynamic>>> getPatients() {
+  //   return FirebaseFirestore.instance.collection('Patient').snapshots();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Home Page'),
-      //   backgroundColor: Color(0xFF186257),
-      // ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -27,8 +27,8 @@ class homePage extends StatelessWidget {
                   height: 24,
                   width: 24,
                 ),
-                SizedBox(width: 8),
-                Text(
+                const SizedBox(width: 8),
+                const Text(
                   'Hello!',
                   style: TextStyle(
                     fontSize: 18,
@@ -37,7 +37,7 @@ class homePage extends StatelessWidget {
                 ),
               ],
             ),
-            Text(
+            const Text(
               'Dr. Ahmed',
               style: TextStyle(
                 fontSize: 28,
@@ -46,14 +46,14 @@ class homePage extends StatelessWidget {
                 fontFamily: 'Merriweather',
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                color: Color(0xD9D9D9).withOpacity(0.7),
+                color: const Color(0x00d9d9d9).withOpacity(0.7),
               ),
-              child: TextField(
+              child: const TextField(
                 decoration: InputDecoration(
                   hintText: 'Search...',
                   border: InputBorder.none,
@@ -61,8 +61,8 @@ class homePage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
               'Recent Articles',
               style: TextStyle(
                 fontSize: 22,
@@ -71,8 +71,8 @@ class homePage extends StatelessWidget {
                 fontFamily: 'Merriweather',
               ),
             ),
-            SizedBox(height: 5),
-            Container(
+            const SizedBox(height: 5),
+            SizedBox(
               height: 150,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -85,8 +85,8 @@ class homePage extends StatelessWidget {
                     ),
                     child: Container(
                       width: 340,
-                      padding: EdgeInsets.all(16),
-                      child: Column(
+                      padding: const EdgeInsets.all(16),
+                      child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -127,11 +127,11 @@ class homePage extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Patients',
                   style: TextStyle(
                     fontSize: 22,
@@ -161,7 +161,7 @@ class homePage extends StatelessWidget {
                     }).toList();
                   },
                   child: Container(
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                     ),
@@ -175,86 +175,27 @@ class homePage extends StatelessWidget {
               ],
             ),
             Expanded(
-              child: Container(
-                height: 800,
-                child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                  stream: getPatients(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      var patients = snapshot.data!.docs;
+              child: StreamBuilder<Patient>(
+                stream: FirestoreService().streamPatient('98765'),
+                builder:
+                    (BuildContext context, AsyncSnapshot<Patient> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
 
-                      return ListView.builder(
-                        itemCount: patients.length,
-                        itemBuilder: (context, index) {
-                          var patientName =
-                              patients[index].data()['Name']?.toString();
-                          var patientNumber =
-                              patients[index].data()['ID']?.toString();
-                          if (patientName != null &&
-                              patientName != 'No Name Available' &&
-                              patientNumber != null) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PatientPage(),
-                                  ),
-                                );
-                              },
-                              child: Card(
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(28),
-                                ),
-                                child: Container(
-                                  height: 130,
-                                  padding: EdgeInsets.all(8),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        patientName,
-                                        style: TextStyle(
-                                          fontSize: 25,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Merriweather',
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        'patient#' + patientNumber,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          } else {
-                            return SizedBox
-                                .shrink(); // Return an empty widget if name is not available
-                          }
-                        },
-                      );
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
-                      return Center(
-                        child: Text('Error loading data'),
-                      );
-                    }
-                  },
-                ),
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+
+                  Patient? patient = snapshot.data;
+
+                  if (patient != null) {
+                    return Text(patient
+                        .name); // Assuming 'name' is a property of the Patient class
+                  } else {
+                    return Text('Patient not found');
+                  }
+                },
               ),
             ),
           ],
@@ -264,11 +205,11 @@ class homePage extends StatelessWidget {
         onPressed: () {
           Navigator.of(context).pushNamed('AddpatientScreen');
         },
-        child: Icon(Icons.add),
-        backgroundColor: Color(0xFF186257),
+        backgroundColor: const Color(0xFF186257),
+        child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomNavigationBar: NavBar(),
+      bottomNavigationBar: const NavBar(),
     );
   }
 }

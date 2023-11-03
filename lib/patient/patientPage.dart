@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'nav_bar.dart';
+import 'package:flutter_application_1/shared/nav_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PatientPage extends StatelessWidget {
+  const PatientPage({super.key});
+
   Future<DocumentSnapshot<Map<String, dynamic>>> getPatientInfo() async {
     DocumentSnapshot<Map<String, dynamic>> snapshot =
         await FirebaseFirestore.instance.collection('Patient').doc('P01').get();
@@ -17,7 +19,7 @@ class PatientPage extends StatelessWidget {
       future: getPatientInfo(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Return a loader while data is being fetched.
+          return const CircularProgressIndicator(); // Return a loader while data is being fetched.
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
@@ -44,7 +46,7 @@ class PatientPage extends StatelessWidget {
             //   title: Text('Patient Page'),
             // ),
             body: Padding(
-              padding: EdgeInsets.only(left: 25.0),
+              padding: const EdgeInsets.only(left: 25.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -54,13 +56,13 @@ class PatientPage extends StatelessWidget {
                       children: [
                         Text(
                           "$patientName",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF186257),
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         GestureDetector(
                           onTap: () async {
                             await showModalBottomSheet(
@@ -70,8 +72,8 @@ class PatientPage extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
                                     ListTile(
-                                      leading: Icon(Icons.message),
-                                      title: Text('Send SMS'),
+                                      leading: const Icon(Icons.message),
+                                      title: const Text('Send SMS'),
                                       onTap: () async {
                                         final phoneNumber = '+966$patientPhone';
                                         final url = 'sms:$phoneNumber';
@@ -86,8 +88,8 @@ class PatientPage extends StatelessWidget {
                                       },
                                     ),
                                     ListTile(
-                                      leading: Icon(Icons.email),
-                                      title: Text('Send Email'),
+                                      leading: const Icon(Icons.email),
+                                      title: const Text('Send Email'),
                                       onTap: () async {
                                         final email = '$patientEmail';
                                         final url = 'mailto:$email';
@@ -102,8 +104,8 @@ class PatientPage extends StatelessWidget {
                                       },
                                     ),
                                     ListTile(
-                                      leading: Icon(Icons.phone),
-                                      title: Text('WhatsApp'),
+                                      leading: const Icon(Icons.phone),
+                                      title: const Text('WhatsApp'),
                                       onTap: () async {
                                         final phoneNumber = '+966$patientPhone';
                                         final url =
@@ -124,7 +126,7 @@ class PatientPage extends StatelessWidget {
                             );
                           },
                           child: Padding(
-                            padding: EdgeInsets.only(right: 30.0),
+                            padding: const EdgeInsets.only(right: 30.0),
                             child: Image.asset(
                               'images/contact.png',
                               height: 100,
@@ -143,12 +145,12 @@ class PatientPage extends StatelessWidget {
                           width: boxWidth,
                           height: 180,
                           decoration: BoxDecoration(
-                            color: Color(0xFFF0F3F5),
+                            color: const Color(0xFFF0F3F5),
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.1),
-                                offset: Offset(0, 4),
+                                offset: const Offset(0, 4),
                                 blurRadius: 4,
                                 spreadRadius: 0,
                               ),
@@ -157,34 +159,34 @@ class PatientPage extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 55),
+                              const SizedBox(height: 55),
                               Padding(
                                 padding: const EdgeInsets.only(left: 16.0),
                                 child: Text(
                                   'Patient Number: $patientID',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
                               Padding(
                                 padding: const EdgeInsets.only(left: 16.0),
                                 child: Text(
                                   'Phone: $patientPhone',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
                               Padding(
                                 padding: const EdgeInsets.only(left: 16.0),
                                 child: Text(
                                   'Email: $patientEmail',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
@@ -199,11 +201,18 @@ class PatientPage extends StatelessWidget {
                         child: Container(
                           width: boxWidth,
                           height: 45,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF186257),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                            ),
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
+                              const Padding(
+                                padding: EdgeInsets.only(
                                     left: 16.0, top: 5.0, right: 16.0),
                                 child: Text(
                                   "Patient's Information",
@@ -223,18 +232,11 @@ class PatientPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF186257),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                            ),
-                          ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   Stack(
                     children: [
                       Align(
@@ -243,18 +245,18 @@ class PatientPage extends StatelessWidget {
                           width: boxWidth, // Set the box width
                           height: 180,
                           decoration: BoxDecoration(
-                            color: Color(0xFFF0F3F5),
+                            color: const Color(0xFFF0F3F5),
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.1),
-                                offset: Offset(0, 4),
+                                offset: const Offset(0, 4),
                                 blurRadius: 4,
                                 spreadRadius: 0,
                               ),
                             ],
                           ),
-                          child: Padding(
+                          child: const Padding(
                             padding: EdgeInsets.only(
                                 top: 18.0), // Adjust the value as needed
                             child: Align(
@@ -274,14 +276,21 @@ class PatientPage extends StatelessWidget {
                         alignment: Alignment.topLeft,
                         child: Container(
                           width: boxWidth, // Set the box width
-                          height: 45, // 0.2 of the height of the big box
+                          height: 45,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF186257), // Color 186257
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                            ),
+                          ), // 0.2 of the height of the big box
                           child: Row(
                             // Added Row widget
                             mainAxisAlignment: MainAxisAlignment
                                 .spaceBetween, // Aligns items to the start and end of the row
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
+                              const Padding(
+                                padding: EdgeInsets.only(
                                     left: 16.0,
                                     top: 5.0,
                                     right: 16.0), // Adjusted padding
@@ -306,20 +315,13 @@ class PatientPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF186257), // Color 186257
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                            ),
-                          ),
                         ),
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                     ],
                   ),
-                  SizedBox(height: 20.0),
-                  Align(
+                  const SizedBox(height: 20.0),
+                  const Align(
                     alignment: Alignment.topLeft,
                     child: Text(
                       'History of generated reports',
@@ -330,8 +332,8 @@ class PatientPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 40.0),
-                  Align(
+                  const SizedBox(height: 40.0),
+                  const Align(
                     alignment: Alignment.topCenter, // Center align the text
                     child: Text(
                       'No reports yet',
@@ -344,7 +346,7 @@ class PatientPage extends StatelessWidget {
                 ],
               ),
             ),
-            bottomNavigationBar: NavBar(),
+            bottomNavigationBar: const NavBar(),
           );
         }
       },

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 //import 'package:flutter_application_1/publishPage.dart';
-import 'homePage.dart';
 
 class NavBar extends StatefulWidget {
+  const NavBar({super.key});
+
   @override
   _NavBarState createState() => _NavBarState();
 }
@@ -35,7 +36,7 @@ class _NavBarState extends State<NavBar> {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 5,
             blurRadius: 7,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -78,7 +79,7 @@ class NavBarItem extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  NavBarItem({
+  const NavBarItem({super.key, 
     required this.imagePath,
     required this.isSelected,
     required this.onTap,
@@ -92,7 +93,7 @@ class NavBarItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            '$imagePath',
+            imagePath,
             width: 25,
             height: 25,
           ),

@@ -8,8 +8,8 @@ class SpaceVH extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: height == null ? 0.0 : height,
-      width: width == null ? 0.0 : width,
+      height: height ?? 0.0,
+      width: width ?? 0.0,
     );
   }
 }

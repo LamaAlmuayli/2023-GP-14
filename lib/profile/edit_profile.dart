@@ -1,9 +1,6 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'nav_bar.dart';
-import 'background.dart';
+import '../shared/nav_bar.dart';
 
 class editprofile extends StatefulWidget {
   const editprofile({super.key});
@@ -76,12 +73,12 @@ class _SignUpState extends State<editprofile> {
     return Scaffold(
       body: Stack(
         children: [
-          Background(),
+          const Background(),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: MediaQuery.of(context).size.height / 2,
-              color: Color(0xFF186257),
+              color: const Color(0xFF186257),
             ),
           ),
           Align(
@@ -89,10 +86,10 @@ class _SignUpState extends State<editprofile> {
             child: FractionallySizedBox(
               heightFactor: 0.6,
               child: Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   ),
@@ -101,7 +98,7 @@ class _SignUpState extends State<editprofile> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
@@ -111,7 +108,7 @@ class _SignUpState extends State<editprofile> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Center(
+                        const Center(
                           child: Text(
                             'Profile information',
                             style: TextStyle(
@@ -120,7 +117,7 @@ class _SignUpState extends State<editprofile> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         StreamBuilder<DocumentSnapshot>(
                           stream: therapistStream,
                           builder: (context, snapshot) {
@@ -152,41 +149,41 @@ class _SignUpState extends State<editprofile> {
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   controller: _displayFullnameController,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     labelText: 'Full Name',
                                     hintText: '',
                                     // Rest of your TextFormField properties
                                   ),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 TextFormField(
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   controller: _displayEmailController,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     labelText: 'Email',
                                     hintText: 'xxxx@xxxxx.xx',
                                     // Rest of your TextFormField properties
                                   ),
                                 ),
                                 // Other form fields here
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 TextFormField(
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   controller: _displayJobController,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     labelText: 'Job Title',
                                     hintText: 'Physical Therapist',
                                     // Rest of your TextFormField properties
                                   ),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 TextFormField(
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   controller: _displayHospitalController,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     labelText: 'Hospital/Clinic',
                                     hintText: '',
                                     // Rest of your TextFormField properties
@@ -197,7 +194,7 @@ class _SignUpState extends State<editprofile> {
                             );
                           },
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
@@ -206,9 +203,9 @@ class _SignUpState extends State<editprofile> {
                           },
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(Color(0xFF186257)),
+                                MaterialStateProperty.all(const Color(0xFF186257)),
                           ),
-                          child: Text('Save'),
+                          child: const Text('Save'),
                         ),
                       ],
                     ),
@@ -219,18 +216,20 @@ class _SignUpState extends State<editprofile> {
           ),
         ],
       ),
-      bottomNavigationBar: NavBar(),
+      bottomNavigationBar: const NavBar(),
     );
   }
 }
 // Extension and Background classes remain the same
 
 extension StringValidation on String {
-  bool get isAlphaOnly => this.runes.every(
+  bool get isAlphaOnly => runes.every(
       (rune) => (rune >= 65 && rune <= 90) || (rune >= 97 && rune <= 122));
 }
 
 class Background extends StatelessWidget {
+  const Background({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(

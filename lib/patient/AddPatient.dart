@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/background.dart';
+import 'package:flutter_application_1/shared/background.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_application_1/services/authentic.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quickalert/quickalert.dart';
 
@@ -22,6 +22,12 @@ class _AddPatientState extends State<AddPatient> {
   final _emailController = TextEditingController();
 
   Future<void> Addpatient() async {
+    var user = AuthService().user;
+
+    if (user == null) {
+      return;
+    }
+
     // Check if any of the fields are empty
     if (_patientnameController.text.isEmpty ||
         _idController.text.isEmpty ||
@@ -29,7 +35,7 @@ class _AddPatientState extends State<AddPatient> {
         _emailController.text.isEmpty) {
       final scaffold = ScaffoldMessenger.of(context);
       scaffold.showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Please fill out all the fields.'),
         ),
       );
@@ -48,10 +54,16 @@ class _AddPatientState extends State<AddPatient> {
     } else {
       Map<String, String> dataToSave = {
         'Patient Name': _patientnameController.text,
-        'ID': _idController.text,
+        'Patient Number': _idController.text,
         'Phone Number': _phoneController.text,
         'Email': _emailController.text,
+        'TheraID': user.uid,
       };
+
+      await FirebaseFirestore.instance
+          .collection('Patient')
+          .doc(_idController.text)
+          .set(dataToSave);
 
       FirebaseFirestore.instance.collection('Patient').add(dataToSave);
 
@@ -85,13 +97,13 @@ class _AddPatientState extends State<AddPatient> {
       child: Scaffold(
         body: Stack(
           children: [
-            Background(),
+            const Background(),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
                 height: MediaQuery.of(context).size.height /
                     2, // Half of the screen
-                color: Color.fromRGBO(24, 98, 87, 1),
+                color: const Color.fromRGBO(24, 98, 87, 1),
               ),
             ),
             Align(
@@ -100,10 +112,10 @@ class _AddPatientState extends State<AddPatient> {
                 heightFactor:
                     0.6, // Adjust this value as needed to control the form height
                 child: Container(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
                     ),
@@ -112,7 +124,7 @@ class _AddPatientState extends State<AddPatient> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 5,
                         blurRadius: 7,
-                        offset: Offset(0, 3),
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
@@ -120,17 +132,16 @@ class _AddPatientState extends State<AddPatient> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Center(
+                        const Center(
                           child: Text(
                             'Add a patient',
                             style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Merriweather'
-                            ),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Merriweather'),
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         TextFormField(
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
@@ -140,12 +151,13 @@ class _AddPatientState extends State<AddPatient> {
                               hintText: '',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color: Color(
                                       0xFF186257), // Blue border in hex ( i will fix it)
                                 ),
                               ),
-                              prefixIcon: Icon(Icons.person), // Person icon
+                              prefixIcon:
+                                  const Icon(Icons.person), // Person icon
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -155,7 +167,7 @@ class _AddPatientState extends State<AddPatient> {
                               }
                               return null;
                             }),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         TextFormField(
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
@@ -165,12 +177,13 @@ class _AddPatientState extends State<AddPatient> {
                               hintText: 'XXXXX',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color: Color(
                                       0xFF186257), // Blue border in hex ( i will fix it)
                                 ),
                               ),
-                              prefixIcon: Icon(Icons.person), // Person icon
+                              prefixIcon:
+                                  const Icon(Icons.person), // Person icon
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -182,7 +195,7 @@ class _AddPatientState extends State<AddPatient> {
                               }
                               return null;
                             }),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         TextFormField(
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
@@ -192,12 +205,13 @@ class _AddPatientState extends State<AddPatient> {
                               hintText: '05XXXXXXXX',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color: Color(
                                       0xFF186257), // Blue border in hex ( i will fix it)
                                 ),
                               ),
-                              prefixIcon: Icon(Icons.phone), // Person icon
+                              prefixIcon:
+                                  const Icon(Icons.phone), // Person icon
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -214,7 +228,7 @@ class _AddPatientState extends State<AddPatient> {
                               }
                               return null;
                             }),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         TextFormField(
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
@@ -224,41 +238,44 @@ class _AddPatientState extends State<AddPatient> {
                               hintText: 'xxxx@xxxxx.com',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color:
                                       Color(0xFF186257), // Blue border in hex
                                 ),
                               ),
-                              prefixIcon: Icon(Icons.email), // Email icon
+                              prefixIcon: const Icon(Icons.email), // Email icon
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Email is required';
-                              }  else if (!EmailValidator.validate(value) || RegExp(r'^[A-Za-z][A-Za-z0-9]*$').hasMatch(value)) {
+                              } else if (!EmailValidator.validate(value) ||
+                                  RegExp(r'^[A-Za-z][A-Za-z0-9]*$')
+                                      .hasMatch(value)) {
                                 return 'Enter a valid email';
                               }
                               // You should add logic to check if the email is already in the database here.
                               // If it is repeated, return an error message.
                               return null;
                             }),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 25),
+                          padding: const EdgeInsets.symmetric(horizontal: 25),
                           child: GestureDetector(
                             onTap: Addpatient,
                             child: Container(
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
-                                color: Color(0xFF186257),
+                                color: const Color(0xFF186257),
                                 borderRadius: BorderRadius.circular(
                                     15), // Rounded borders
                               ),
-                              child: Center(
+                              child: const Center(
                                 child: Text(
                                   'Add',
                                   style: TextStyle(
-                                    color: Colors.white, 
-                                      fontFamily: 'Merriweather',// White text color
+                                    color: Colors.white,
+                                    fontFamily:
+                                        'Merriweather', // White text color
                                   ),
                                 ),
                               ),
@@ -277,7 +294,7 @@ class _AddPatientState extends State<AddPatient> {
               top: 20, // Adjust the position as needed
               left: 10, // Adjust the position as needed
               child: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.arrow_back,
                   size: 50,
                   color: Color(0xFFFFFFFF),
@@ -295,6 +312,6 @@ class _AddPatientState extends State<AddPatient> {
 }
 
 extension StringValidation on String {
-  bool get isAlphaOnly => this.runes.every(
+  bool get isAlphaOnly => runes.every(
       (rune) => (rune >= 65 && rune <= 90) || (rune >= 97 && rune <= 122));
 }
