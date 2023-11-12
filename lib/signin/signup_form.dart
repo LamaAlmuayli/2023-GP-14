@@ -194,7 +194,8 @@ class _SignUpState extends State<SignUpForm> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Full name is required';
-                            } else if (!value.isAlphaOnly) {
+                            } else if (!RegExp(r'^[a-zA-Z\s]+$')
+                                .hasMatch(value)) {
                               return 'Full name should only contain alphabetic characters';
                             }
                             return null;

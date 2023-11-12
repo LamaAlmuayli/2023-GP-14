@@ -29,12 +29,14 @@ class Patient {
   final String phone;
   final String email;
   final String patientNum;
+  final String gender;
 
   Patient({
     this.name = '',
     this.phone = '',
     this.email = '',
     this.patientNum = '',
+    this.gender = '',
   });
   factory Patient.fromJson(Map<String, dynamic> json) =>
       _$PatientFromJson(json);
@@ -43,17 +45,21 @@ class Patient {
 
 class Article {
   final String Content;
-  final int ID;
+  final String autherID;
   final String KeyWords;
   final Timestamp PublishTime;
   final String Title;
+  final String name;
+  final String image;
 
   Article({
     this.Content = '',
-    this.ID = 0,
     this.KeyWords = '',
     required this.PublishTime,
     this.Title = '',
+    this.autherID = '',
+    this.name = '',
+    this.image = '',
   });
   factory Article.fromJson(Map<String, dynamic> json) =>
       _$ArticleFromJson(json);

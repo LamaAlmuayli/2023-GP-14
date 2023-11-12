@@ -1,6 +1,12 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../shared/nav_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/services/authentic.dart';
+import 'package:flutter_application_1/services/firestore.dart';
+import 'package:flutter_application_1/services/models.dart';
+import 'package:flutter_application_1/shared/background.dart';
+import 'package:flutter_application_1/shared/nav_bar.dart';
 
 class editprofile extends StatefulWidget {
   const editprofile({super.key});
@@ -23,8 +29,15 @@ class _SignUpState extends State<editprofile> {
   final _storeEmailController = TextEditingController();
   final _storeJobController = TextEditingController();
   final _storeHospitalController = TextEditingController();
+  var user = AuthService().user;
+  late Stream<DocumentSnapshot> therapistStream = FirebaseFirestore.instance
+      .collection('Therapist')
+      .doc(user!.uid)
+      .snapshots();
 
-  late Stream<DocumentSnapshot> therapistStream;
+  // void openedit_pass_auth() {
+  // Navigator.of(context).pushReplacementNamed('edit_pass_auth');
+  // }
 
   @override
   void initState() {
@@ -33,7 +46,7 @@ class _SignUpState extends State<editprofile> {
     // Initialize StreamBuilder with controllers for UI display
     therapistStream = FirebaseFirestore.instance
         .collection('Therapist')
-        .doc('d2qJez1joy6pEsckWrJg')
+        .doc('JzhiqlmRT8qd3IX65cGr')
         .snapshots();
 
     // Add listener to update UI controllers
@@ -55,17 +68,40 @@ class _SignUpState extends State<editprofile> {
   }
 
   Future<void> saveTherapistData() async {
-    Map<String, String> dataToSave = {
-      'Full name': _storeFullnameController.text,
-      'Email': _storeEmailController.text,
-      'Job Title': _storeJobController.text,
-      'Hospital/Clinic': _storeHospitalController.text,
-    };
+    // Map<String, String> dataToSave = {
+    //   'Full name': _displayFullnameController.text,
+    //   'Email': _displayEmailController.text,
+    //   'Hospital/Clinic': _displayHospitalController.text,
+    //   'Job Title': _displayJobController.text,
+    // };
+    final CollectionReference collection =
+        FirebaseFirestore.instance.collection('Therapist');
+    final DocumentReference document = collection.doc(user!.uid);
 
-    await FirebaseFirestore.instance
-        .collection('Therapist')
-        .doc('d2qJez1joy6pEsckWrJg')
-        .update(dataToSave);
+// Fetch the existing document
+    final DocumentSnapshot snapshot = await document.get();
+
+    if (snapshot.exists) {
+      // Get the existing data as a Map
+      Map<String, dynamic> existingData =
+          snapshot.data() as Map<String, dynamic>;
+
+      // Remove the fields you want to "delete"
+      existingData.remove('Full name');
+      existingData.remove('Email');
+      existingData.remove('HospitalClinic');
+      existingData.remove('Job Title');
+
+      // Add the fields with new values
+      existingData['Full name'] = _displayFullnameController.text;
+      existingData['Email'] = _displayEmailController.text;
+      existingData['HospitalClinic'] = _displayHospitalController.text;
+      existingData['Job Title'] = _displayJobController.text;
+
+      // Update the document with the modified data
+      await document.set(existingData);
+      Navigator.of(context).pushReplacementNamed('edit_pass_auth');
+    }
   }
 
   @override
@@ -73,12 +109,12 @@ class _SignUpState extends State<editprofile> {
     return Scaffold(
       body: Stack(
         children: [
-          const Background(),
+          Background(),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: MediaQuery.of(context).size.height / 2,
-              color: const Color(0xFF186257),
+              color: Color(0xFF186257),
             ),
           ),
           Align(
@@ -86,10 +122,10 @@ class _SignUpState extends State<editprofile> {
             child: FractionallySizedBox(
               heightFactor: 0.6,
               child: Container(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: const BorderRadius.only(
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   ),
@@ -98,7 +134,7 @@ class _SignUpState extends State<editprofile> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: const Offset(0, 3),
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
@@ -108,7 +144,7 @@ class _SignUpState extends State<editprofile> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Center(
+                        Center(
                           child: Text(
                             'Profile information',
                             style: TextStyle(
@@ -117,30 +153,22 @@ class _SignUpState extends State<editprofile> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        StreamBuilder<DocumentSnapshot>(
-                          stream: therapistStream,
+                        SizedBox(height: 10),
+                        StreamBuilder<Therapist>(
+                          stream: FirestoreService().streamTherapist(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.active) {
-                              final therapistData = snapshot.data!.data();
+                              final therapistData = snapshot.data!;
                               if (therapistData != null) {
                                 _storeFullnameController.text =
-                                    therapistData is Map<String, dynamic>
-                                        ? therapistData['Full name']
-                                        : '';
+                                    therapistData.name;
                                 _storeEmailController.text =
-                                    therapistData is Map<String, dynamic>
-                                        ? therapistData['Email']
-                                        : '';
+                                    therapistData.email;
                                 _storeJobController.text =
-                                    therapistData is Map<String, dynamic>
-                                        ? therapistData['Job Title']
-                                        : '';
+                                    therapistData.jobTitle;
                                 _storeHospitalController.text =
-                                    therapistData is Map<String, dynamic>
-                                        ? therapistData['Hospital/Clinic']
-                                        : '';
+                                    therapistData.hospitalClinic;
                               }
                             }
                             return Column(
@@ -149,63 +177,124 @@ class _SignUpState extends State<editprofile> {
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   controller: _displayFullnameController,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     labelText: 'Full Name',
                                     hintText: '',
-                                    // Rest of your TextFormField properties
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: BorderSide(
+                                        color: Color(0xFF186257),
+                                      ),
+                                    ),
                                   ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Full name is required';
+                                    } else if (!RegExp(r'^[a-zA-Z\s]+$')
+                                        .hasMatch(value)) {
+                                      return 'Full name should only contain alphabetic characters';
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10),
                                 TextFormField(
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   controller: _displayEmailController,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     labelText: 'Email',
                                     hintText: 'xxxx@xxxxx.xx',
-                                    // Rest of your TextFormField properties
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: BorderSide(
+                                        color: Color(0xFF186257),
+                                      ),
+                                    ),
                                   ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Email is required';
+                                    } else if (!EmailValidator.validate(
+                                            value) ||
+                                        RegExp(r'^[A-Za-z][A-Za-z0-9]*$')
+                                            .hasMatch(value)) {
+                                      return 'Enter a valid email';
+                                    }
+
+                                    return null;
+                                  },
                                 ),
-                                // Other form fields here
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10),
                                 TextFormField(
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  controller: _displayJobController,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Job Title',
-                                    hintText: 'Physical Therapist',
-                                    // Rest of your TextFormField properties
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    controller: _displayJobController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Job Title',
+                                      hintText: 'Physical Therapist',
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        borderSide: BorderSide(
+                                          color: Color(0xFF186257),
+                                        ),
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Job Title is required';
+                                      } else if (!value.isAlphaOnly) {
+                                        return 'Job Title should only contain alphabetic characters';
+                                      }
+                                      return null;
+                                    }),
+                                SizedBox(height: 10),
                                 TextFormField(
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   controller: _displayHospitalController,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     labelText: 'Hospital/Clinic',
                                     hintText: '',
-                                    // Rest of your TextFormField properties
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: BorderSide(
+                                        color: Color(0xFF186257),
+                                      ),
+                                    ),
                                   ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Hospital/Clinic is required';
+                                    } else if (!value.isAlphaOnly) {
+                                      return 'Hospital/Clinic should only contain alphabetic characters';
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                // Rest of the form fields
                               ],
                             );
                           },
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10),
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               saveTherapistData();
+                              Navigator.pop(context);
                             }
                           },
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(const Color(0xFF186257)),
+                                MaterialStateProperty.all(Color(0xFF186257)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
                           ),
-                          child: const Text('Save'),
+                          child: Text('Save'),
                         ),
                       ],
                     ),
@@ -216,24 +305,12 @@ class _SignUpState extends State<editprofile> {
           ),
         ],
       ),
-      bottomNavigationBar: const NavBar(),
+      bottomNavigationBar: NavBar(),
     );
   }
 }
-// Extension and Background classes remain the same
 
 extension StringValidation on String {
-  bool get isAlphaOnly => runes.every(
+  bool get isAlphaOnly => this.runes.every(
       (rune) => (rune >= 65 && rune <= 90) || (rune >= 97 && rune <= 122));
-}
-
-class Background extends StatelessWidget {
-  const Background({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        // Your background widget code here
-        );
-  }
 }

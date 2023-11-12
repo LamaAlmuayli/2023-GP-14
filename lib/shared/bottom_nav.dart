@@ -18,13 +18,13 @@ class _bottomNavBarState extends State<bottomNavBar> {
           Navigator.pushNamed(context, 'homepage');
           break;
         case 1:
-          Navigator.pushNamed(context, 'homepage'); //change later
+          Navigator.pushNamed(context, 'communitypage');
           break;
         case 2:
-          Navigator.pushNamed(context, 'homepage'); //change later
+          Navigator.pushNamed(context, 'empty'); //change later
           break;
         case 3:
-          Navigator.pushNamed(context, 'homepage'); //chaneg later
+          Navigator.pushNamed(context, 'empty'); //chaneg later
           break;
         case 4:
           Navigator.pushNamed(context, 'profilepage');
@@ -35,34 +35,36 @@ class _bottomNavBarState extends State<bottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.people),
-          label: 'Community',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.publish),
-          label: 'Publish',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.chat_bubble),
-          label: 'Chatbot',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor:
-          const Color(0xFF186257), // Change the selected icon color
-      unselectedItemColor: Colors.grey, // Change the unselected icon color
-      onTap: _onItemTapped,
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Community',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.publish),
+            label: 'Publish',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_bubble),
+            label: 'Chatbot',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor:
+            const Color(0xFF186257), // Change the selected icon color
+        unselectedItemColor: Colors.grey, // Change the unselected icon color
+        onTap: _onItemTapped,
+      ),
     );
   }
 }

@@ -51,17 +51,17 @@ class _NavBarState extends State<NavBar> {
           NavBarItem(
             imagePath: 'images/community.png',
             isSelected: selectedIcon == 'community',
-            onTap: (() => Navigator.of(context).pushNamed('homepage')),
+            onTap: (() => Navigator.of(context).pushNamed('communitypage')),
           ),
           NavBarItem(
             imagePath: 'images/publish.png',
             isSelected: selectedIcon == 'publish',
-            onTap: (() => Navigator.of(context).pushNamed('homepage')),
+            onTap: (() => Navigator.of(context).pushNamed('empty')),
           ),
           NavBarItem(
             imagePath: 'images/chatbot.png',
             isSelected: selectedIcon == 'chatbot',
-            onTap: (() => Navigator.of(context).pushNamed('homepage')),
+            onTap: (() => Navigator.of(context).pushNamed('empty')),
           ),
           NavBarItem(
             imagePath: 'images/profile.png',
@@ -79,7 +79,8 @@ class NavBarItem extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const NavBarItem({super.key, 
+  const NavBarItem({
+    super.key,
     required this.imagePath,
     required this.isSelected,
     required this.onTap,

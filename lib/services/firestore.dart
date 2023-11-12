@@ -10,11 +10,9 @@ class FirestoreService {
     //not yet working
     var user = AuthService().user;
     if (user != null) {
-      //print('User is signed in: ${user.uid}');
       var ref = _db.collection('Therapist').doc(user.uid);
       return ref.snapshots().map((doc) => Therapist.fromJson(doc.data()!));
     } else {
-      //print('User is not signed in');
       return Stream.fromIterable([Therapist()]);
     }
   }
@@ -106,13 +104,24 @@ class FirestoreService {
     var user = AuthService().user!;
 
     return ref
-        .where('TheraID', isEqualTo: user.uid)
+        .where('auhtorID', isEqualTo: user.uid)
         .snapshots()
         .map((querySnapshot) {
       return querySnapshot.docs
           .map((doc) => Article.fromJson(doc.data()))
           .toList();
     });
+  }
+
+  Stream<Article> streamArticle(String aid) {
+    //(not tried yet)
+    var user = AuthService().user;
+    if (user != null) {
+      var ref = _db.collection('Article').doc(aid);
+      return ref.snapshots().map((doc) => Article.fromJson(doc.data()!));
+    } else {
+      return Stream.fromIterable([Article(PublishTime: Timestamp.now())]);
+    }
   }
 
   Future<void> addArticle(Article article) async {
@@ -124,9 +133,8 @@ class FirestoreService {
         'Title': article.Title,
         'Content': article.Content,
         'PublishTime': article.PublishTime,
-        'ID': article.ID,
+        'authorID': article.autherID,
         'KeyWords': article.KeyWords,
-        'TheraID': user.uid,
       });
     } catch (e) {
       print('Error adding article: $e');

@@ -1,9 +1,14 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/profile/edit_profile.dart';
+import 'package:flutter_application_1/services/authentic.dart';
+import 'package:flutter_application_1/services/firestore.dart';
+import 'package:flutter_application_1/services/models.dart';
+import 'package:flutter_application_1/shared/background.dart';
 import 'package:flutter_application_1/shared/nav_bar.dart';
-import '../shared/background.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/edit_pass_auth.dart';
 
 class profile extends StatefulWidget {
   const profile({super.key});
@@ -20,51 +25,37 @@ class _SignUpState extends State<profile> {
   final _hospitalController = TextEditingController();
   final _passwordController = TextEditingController();
   final _cnfpasswordController = TextEditingController();
-
+  var user = AuthService().user;
 // Stream to retrieve therapist data
-  late Stream<DocumentSnapshot> therapistStream;
+  late Stream<DocumentSnapshot> therapistStream = FirebaseFirestore.instance
+      .collection('Therapist')
+      .doc(user!.uid)
+      .snapshots();
+
+  void openedit_pass_auth() {
+    Navigator.of(context).pushReplacementNamed('edit_pass_auth');
+  }
+
   @override
   void initState() {
     super.initState();
-    // Initialize the stream to get the last document added
+
     FirebaseFirestore.instance
         .collection('Therapist')
-        .orderBy(FieldPath.documentId,
-            descending: true) // Order by document ID in descending order
-        .limit(
-            1) // Limit the query to 1 result, which is the last added document
+        .orderBy(FieldPath.documentId, descending: true)
+        .limit(1)
         .snapshots()
         .listen((QuerySnapshot snapshot) {
       if (snapshot.docs.isNotEmpty) {
-        // Do something with the last document
         DocumentSnapshot lastDocument = snapshot.docs.first;
         setState(() {
           therapistStream = FirebaseFirestore.instance
               .collection('Therapist')
-              .doc(lastDocument.id) // Get the document by its ID
+              .doc(user!.uid)
               .snapshots();
         });
       }
     });
-  }
-
-  Future signUp() async {
-    // If everything is valid, proceed with the sign-up.
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
-    Navigator.of(context).pushNamed('/');
-
-    Map<String, String> dataToSave = {
-      'Full name': _fullnameController.text,
-      'Email': _emailController.text,
-      'Job Title': _jobController.text,
-      'Hospital/Clinic': _hospitalController.text,
-      'Password': _passwordController.text,
-    };
-
-    FirebaseFirestore.instance.collection('Therapist').add(dataToSave);
   }
 
   @override
@@ -80,12 +71,12 @@ class _SignUpState extends State<profile> {
     return Scaffold(
       body: Stack(
         children: [
-          const Background(),
+          Background(),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: MediaQuery.of(context).size.height / 2,
-              color: const Color(0xFF186257),
+              color: Color(0xFF186257),
             ),
           ),
           Align(
@@ -93,10 +84,10 @@ class _SignUpState extends State<profile> {
             child: FractionallySizedBox(
               heightFactor: 0.6,
               child: Container(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: const BorderRadius.only(
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   ),
@@ -105,7 +96,7 @@ class _SignUpState extends State<profile> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: const Offset(0, 3),
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
@@ -113,7 +104,7 @@ class _SignUpState extends State<profile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Center(
+                      Center(
                         child: Text(
                           'Profile information',
                           style: TextStyle(
@@ -122,153 +113,130 @@ class _SignUpState extends State<profile> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      // Use StreamBuilder to populate form fields
-                      StreamBuilder<DocumentSnapshot>(
-                        stream: therapistStream,
+                      SizedBox(height: 10),
+                      StreamBuilder<Therapist>(
+                        stream: FirestoreService().streamTherapist(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.active) {
-                            final therapistData = snapshot.data!.data();
+                            final therapistData = snapshot.data!;
                             if (therapistData != null) {
-                              // Populate form fields
-                              _fullnameController.text =
-                                  therapistData is Map<String, dynamic>
-                                      ? therapistData['Full name']
-                                      : '';
-                              _emailController.text =
-                                  therapistData is Map<String, dynamic>
-                                      ? therapistData['Email']
-                                      : '';
-                              _jobController.text =
-                                  therapistData is Map<String, dynamic>
-                                      ? therapistData['Job Title']
-                                      : '';
+                              _fullnameController.text = therapistData.name;
+                              _emailController.text = therapistData.email;
+                              _jobController.text = therapistData.jobTitle;
                               _hospitalController.text =
-                                  therapistData is Map<String, dynamic>
-                                      ? therapistData['Hospital/Clinic']
-                                      : '';
+                                  therapistData.hospitalClinic;
                             }
                           }
                           return Column(
                             children: [
                               TextFormField(
                                 enabled: false,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
                                 controller: _fullnameController,
                                 decoration: InputDecoration(
                                   labelText: 'Full Name',
                                   hintText: '',
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
                                       color: Color(0xFF186257),
                                     ),
                                   ),
-                                  prefixIcon: const Icon(Icons.person),
+                                  prefixIcon: Icon(Icons.person),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Full name is required';
-                                  } else if (!value.isAlphaOnly) {
-                                    return 'Full name should only contain alphabetic characters';
-                                  }
-                                  return null;
-                                },
                               ),
-                              const SizedBox(height: 10),
+                              SizedBox(height: 10),
                               TextFormField(
                                 enabled: false,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
                                 controller: _emailController,
                                 decoration: InputDecoration(
                                   labelText: 'Email',
                                   hintText: 'xxxx@xxxxx.xx',
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
                                       color: Color(0xFF186257),
                                     ),
                                   ),
-                                  prefixIcon: const Icon(Icons.email),
+                                  prefixIcon: Icon(Icons.email),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Email is required';
-                                  } else if (!EmailValidator.validate(value)) {
-                                    return 'Enter a valid email';
-                                  }
-                                  return null;
-                                },
                               ),
-                              // Other form fields here
-                              const SizedBox(height: 10),
+                              SizedBox(height: 10),
                               TextFormField(
                                 enabled: false,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
                                 controller: _jobController,
                                 decoration: InputDecoration(
                                   labelText: 'Job Title',
                                   hintText: 'Physical Therapist',
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
                                       color: Color(0xFF186257),
                                     ),
                                   ),
-                                  prefixIcon: const Icon(Icons.work),
+                                  prefixIcon: Icon(Icons.work),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Job Title is required';
-                                  } else if (!value.isAlphaOnly) {
-                                    return 'Job Title should only contain alphabetic characters';
-                                  }
-                                  return null;
-                                },
                               ),
-                              const SizedBox(height: 10),
+                              SizedBox(height: 10),
                               TextFormField(
                                 enabled: false,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
                                 controller: _hospitalController,
                                 decoration: InputDecoration(
                                   labelText: 'Hospital/Clinic',
                                   hintText: '',
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
                                       color: Color(0xFF186257),
                                     ),
                                   ),
-                                  prefixIcon: const Icon(Icons.local_hospital),
+                                  prefixIcon: Icon(Icons.local_hospital),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Hospital/Clinic is required';
-                                  }
-                                  return null;
-                                },
                               ),
-                              // Rest of the form fields
                             ],
                           );
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10),
                       ElevatedButton(
-                        onPressed: (() => Navigator.of(context).pushNamed(
-                            'editprofilepage')), // Call the signUp function when the button is pressed
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('editprofilepage');
+                        },
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(const Color(0xFF186257)),
+                              MaterialStateProperty.all(Color(0xFF186257)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
                         ),
-                        child: const Text('Edit'),
+                        child: Text('Edit'),
                       ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Do you want to change your password ? "),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => edit_pass_auth()),
+                              );
+                            },
+                            child: Text(
+                              'Change password',
+                              style: TextStyle(
+                                  color: Color(0xFF186257),
+                                  fontFamily: 'Merriweather'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                         child: TextButton.icon(
@@ -278,16 +246,14 @@ class _SignUpState extends State<profile> {
                             ),
                           ),
                           onPressed: () {
-                            //FirebaseAuth.instance.signOut();
-
                             Navigator.of(context).pushNamed('signinScreen');
                           },
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.logout,
                             size: 30.0,
                             color: Color.fromARGB(255, 150, 150, 150),
                           ),
-                          label: const Text(
+                          label: Text(
                             'Log out',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 150, 150, 150),
@@ -304,12 +270,12 @@ class _SignUpState extends State<profile> {
           ),
         ],
       ),
-      bottomNavigationBar: const NavBar(),
+      bottomNavigationBar: NavBar(),
     );
   }
 }
 
 extension StringValidation on String {
-  bool get isAlphaOnly => runes.every(
+  bool get isAlphaOnly => this.runes.every(
       (rune) => (rune >= 65 && rune <= 90) || (rune >= 97 && rune <= 122));
 }
